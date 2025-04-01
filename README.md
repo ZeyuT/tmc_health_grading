@@ -3,12 +3,14 @@ Classify trapeziometacarpal osteoarthritis from multi-modal data, including CT i
 ### Dependencies:
     torch >= 1.13.1
     torchinfo >= 1.8.0
+    torchvision >= 0.14.1
     xgboost >= 1.6.2
     imagecodecs
     imageio 
     jupyter
     ipykernel 
     matplotlib  
+    matplotlib_venn
     numpy 
     opencv-contrib-python  
     pandas
@@ -17,6 +19,9 @@ Classify trapeziometacarpal osteoarthritis from multi-modal data, including CT i
     scikit-learn 
     scipy
     seaborn 
+    yaml
+    glob
+    
   
 ### Folders:
     image_model: scripts for training and testing models using CT images.
