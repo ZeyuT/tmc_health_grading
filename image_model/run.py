@@ -1,3 +1,11 @@
+# Zeyu Tang
+# 07/2025
+
+# run.py
+# Purpose: Train and test image models using Bony CT images.
+# Usage: python run.py 
+# configs are stored in ../configs.yaml
+
 import numpy as np
 import os
 import sys
