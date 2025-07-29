@@ -10,7 +10,7 @@ __pycache__/
 log_*/
 model_*/
 test_*/
-figures/
+archive/
 *.jpg
 *.eps
 *.pdf

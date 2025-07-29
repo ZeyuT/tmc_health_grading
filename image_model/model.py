@@ -94,6 +94,6 @@ class SwinUNETRClassifier(nn.Module):
         concatenated_x = torch.cat((x1, x2, x3, x4, x5), dim=1)
         # Classifier to output the final class predictions
         x = self.classifier(concatenated_x)
-        x = self.softmax(x)
+        # x = self.softmax(x)
 
         return x
