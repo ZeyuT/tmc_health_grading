@@ -26,7 +26,7 @@ from model import SwinUNETRClassifier
 
 def main():    
     # Configurations
-    config_path = '/project/ahoover/mhealth/zeyut/tmc/TMC AI Files/configs.yaml'
+    config_path = '../configs.yaml'
     with open(config_path, 'r') as file:
         configs = yaml.safe_load(file)
         

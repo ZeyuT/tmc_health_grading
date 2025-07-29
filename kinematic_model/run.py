@@ -48,7 +48,7 @@ def main():
         input_channels = 8
     else:
         input_channels = 1
-    config_path = '/project/ahoover/mhealth/zeyut/tmc/TMC AI Files/configs.yaml'
+    config_path = '../configs.yaml'
     with open(config_path, 'r') as file:
         configs = yaml.safe_load(file)
     model_configs = configs['kinematic_model_configs']
