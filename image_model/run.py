@@ -24,9 +24,7 @@ from data_loader import ImageDataset
 from model import SwinUNETRClassifier
 
 
-def main():
-    grade_idx = int(sys.argv[1]) # 1: old grading scheme. 2: new grading scheme
-    
+def main():    
     # Configurations
     config_path = '/project/ahoover/mhealth/zeyut/tmc/TMC AI Files/configs.yaml'
     with open(config_path, 'r') as file:
@@ -36,11 +34,12 @@ def main():
     raw_data_path = configs['raw_data_path']
     
     gt_path = configs['gt_path']
-
     results_path = os.path.join(configs['results_path'], 'image_model')
     os.makedirs(results_path, exist_ok=True)
     
     model_configs = configs['image_model_configs']
+    gt_type = model_configs['gt_type']
+
     cv_configs = configs['cv_configs']
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -48,15 +47,8 @@ def main():
     # Load ground truth labels and data
     with open(gt_path, 'rb') as file:
         grades = pickle.load(file)    
-    if grade_idx == 1:
-        gt_labels = grades['old']
-    else:
-        gt_labels = {}
-        for sc in grades['new'].keys():
-            if grades['new'][sc] == 2:
-                gt_labels[sc] = 1
-            else:
-                gt_labels[sc] = 0
+        
+    gt_labels = grades[gt_type]
                 
     all_sc = list(gt_labels.keys())
     
@@ -78,7 +70,7 @@ def main():
     ])
  
     # Open a CSV file to write the results
-    result_file = open(os.path.join(results_path, f'result_{grade_idx}.csv'), mode='w', newline='')
+    result_file = open(os.path.join(results_path, f'result_{gt_type}.csv'), mode='w', newline='')
     writer = csv.writer(result_file)
     writer.writerow(['Fold', 'Sample Code', 'Prediction', 'Ground Truth']+[f'P{class_}' for class_ in range(num_classes)])
 
@@ -139,11 +131,11 @@ def main():
             sys.stdout.flush()
             if best_loss > train_loss:               
                 # Save the best model for each fold
-                torch.save(unet.state_dict(), os.path.join(results_path, f'model_{grade_idx}_fold_{fold+1}.pth'))      
+                torch.save(unet.state_dict(), os.path.join(results_path, f'model_{gt_type}_fold_{fold+1}.pth'))      
                 best_loss = train_loss
                 
         # Load weights from the saved best model
-        unet.load_state_dict(torch.load(os.path.join(results_path, f'model_{grade_idx}_fold_{fold+1}.pth')))
+        unet.load_state_dict(torch.load(os.path.join(results_path, f'model_{gt_type}_fold_{fold+1}.pth')))
         
         # Evaluation phase
         unet.eval()
