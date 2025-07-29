@@ -33,6 +33,4 @@ Classify trapeziometacarpal osteoarthritis from multi-modal data, including CT i
     tmc_data.ipynb: pipeline for pre-processing data, including resaving data into pkl files and creating config.yaml for model training.
     tmc_data_plot.ipynb: scripts for visualizing the dataset.
     tmc_xgboost.ipynb: pipeline for training & testing xgboost models
-    tmc_results.ipynb: scripts for summarizing testing results from all models.
-    tmc_model_debug.ipynb: scratch working space for debugging.
-      
+    tmc_results.ipynb: scripts for summarizing testing results from all models.      
