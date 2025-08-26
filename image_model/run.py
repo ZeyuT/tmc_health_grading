@@ -25,6 +25,8 @@ from torch import optim
 from torchvision import transforms
 from torchinfo import summary
 
+import gc
+
 from sklearn.model_selection import train_test_split, KFold, cross_validate, cross_val_score
 from sklearn.metrics import accuracy_score
 
@@ -60,10 +62,10 @@ def main():
                 
     all_sc = list(gt_labels.keys())
     
-    # Identify sample code which has CT image data.
+    # Identify sample code which has processed CT image data.
     valid_sc = []
     for sc in all_sc:
-        image_list = glob.glob(os.path.join(configs['raw_data_path'], f"{sc}/BonyGeometry/DICOMs/CT*/*.IMA"))
+        image_list = glob.glob(os.path.join(configs['processed_data_path'], 'images', f"{sc}.pkl"))
         if len(image_list) > 0:
             valid_sc.append(sc)
     
@@ -90,6 +92,7 @@ def main():
         train_set = ImageDataset(
             gt={key: gt_labels[key] for key in np.array(all_sc)[train_idx] if key in valid_sc},
             data_path=os.path.join(configs['processed_data_path'], 'images'),
+            use_mask=model_configs['use_mask']
         )
 
         # Create data loaders for the current fold
@@ -151,6 +154,7 @@ def main():
         test_set = ImageDataset(
             gt={key: gt_labels[key] for key in np.array(all_sc)[test_idx] if key in valid_sc},
             data_path=os.path.join(configs['processed_data_path'], 'images'),
+            use_mask=model_configs['use_mask']
         )
         
         correct = 0  # Counter for correct predictions
@@ -173,6 +177,12 @@ def main():
         accuracy = correct / total
         print(f"Fold {fold + 1} Accuracy: {accuracy * 100:.2f}%")
         sys.stdout.flush()
+        
+        del train_set, test_set, train_loader, unet
+        torch.cuda.empty_cache()
+        gc.collect()
+        
+        
     result_file.close() 
 
 if __name__ == "__main__":  

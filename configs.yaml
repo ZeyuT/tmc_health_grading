@@ -22,6 +22,7 @@ image_model_configs:
   num_workers: 4
   patience: 3
   seed_path: /project/ahoover/mhealth/zeyut/tmc/pre_trained/swin_unetr_btcv_segmentation/models/model.pt
+  use_mask: false
 kinematic_channels:
 - helical_angle
 - helical_translation

@@ -55,7 +55,9 @@ class SwinUNETRClassifier(nn.Module):
                                          nn.AdaptiveAvgPool3d((2, 2, 2)))
         self.reduce_dim5 = nn.Sequential(nn.Conv3d(768, 32, 1),
                                          nn.AdaptiveAvgPool3d((1, 1, 1)))
-
+        
+        # convert two channel inputs ([image, mask]) to a single channel.
+        self.input_adapter = nn.Conv3d(2, 1, kernel_size=3)
         # Linear classifier
         self.classifier = nn.Sequential(
                         nn.Linear(384, 16), 
@@ -66,7 +68,10 @@ class SwinUNETRClassifier(nn.Module):
         self.softmax = nn.Softmax(dim=1)
         
     def forward(self, x):
-        # Pass input through the Swin Transformer and obtain hidden states
+        if x.size()[1] == 2:
+            # convert two channel inputs ([image, mask]) to a single channel.
+            x = self.input_adapter(x)
+        # Pass input through the Swin Transformer
         hidden_states = self.swinViT(x, normalize=False)
 
         # Encoder
